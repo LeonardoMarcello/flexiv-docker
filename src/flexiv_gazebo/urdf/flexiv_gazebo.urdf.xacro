@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Single Flexiv arm on a fixed base, simulated in Gazebo Classic through gazebo_ros2_control -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="$(arg robot_type)">
+  <xacro:arg name="robot_type" default="Rizon4s" />
+  <xacro:arg name="urdf_file" default="$(find flexiv_gazebo)/urdf/$(arg robot_type).urdf" />
+  <xacro:arg name="controllers_file" default="$(find flexiv_gazebo)/config/flexiv_gazebo_controllers.yaml" />
+  <!-- Joint command interface: 'effort' (torque controllers), 'position_pid' (trajectory controller,
+       position tracked by PID torques, gains in config/<robot_type>/position_pid_gains.yaml) or
+       'position' (teleport, kinematic only).
+       Only one: gazebo_ros2_control activates every declared command interface at startup. -->
+  <xacro:arg name="command_interface" default="effort" />
+
+  <!-- Per-robot simulation config (e.g. initial_positions.yaml) -->
+  <xacro:property name="cfg" value="$(find flexiv_gazebo)/config/$(arg robot_type)" />
+
+  <!-- Arm model (kinematics, inertia, meshes): the same URDF used to generate the Thunder model -->
+  <xacro:include filename="$(arg urdf_file)" />
+
+  <!-- ros2_control: effort or position commands, position/velocity/effort states -->
+  <xacro:property name="prefix" value="" />
+  <xacro:property name="initial_positions"
+    value="${xacro.load_yaml(cfg + '/initial_positions.yaml')['initial_positions']}" />
+
+  <xacro:property name="command_interface" value="$(arg command_interface)" />
+  <xacro:if value="${command_interface == 'position_pid'}">
+    <xacro:property name="pid_gains"
+      value="${xacro.load_yaml(cfg + '/position_pid_gains.yaml')['position_pid_gains']}" />
+  </xacro:if>
+
+  <xacro:macro name="sim_joint" params="name">
+    <joint name="${prefix}${name}">
+      <xacro:if value="${command_interface == 'position_pid'}">
+        <command_interface name="position_pid">
+          <param name="kp">${pid_gains[name]['kp']}</param>
+          <param name="ki">${pid_gains[name]['ki']}</param>
+          <param name="kd">${pid_gains[name]['kd']}</param>
+          <param name="max_integral_error">${pid_gains[name]['max_integral_error']}</param>
+          <param name="min_integral_error">${pid_gains[name]['min_integral_error']}</param>
+          <param name="antiwindup">true</param>
+        </command_interface>
+      </xacro:if>
+      <xacro:unless value="${command_interface == 'position_pid'}">
+        <command_interface name="${command_interface}" />
+      </xacro:unless>
+      <state_interface name="position">
+        <param name="initial_value">${initial_positions[name]}</param>
+      </state_interface>
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+  </xacro:macro>
+
+  <ros2_control name="FlexivGazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <xacro:sim_joint name="joint1" />
+    <xacro:sim_joint name="joint2" />
+    <xacro:sim_joint name="joint3" />
+    <xacro:sim_joint name="joint4" />
+    <xacro:sim_joint name="joint5" />
+    <xacro:sim_joint name="joint6" />
+    <xacro:sim_joint name="joint7" />
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>$(arg controllers_file)</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- Joint force/torque sensors: full joint wrench (applied torque + constraint reaction),
+       published as geometry_msgs/WrenchStamped on /joint_wrench/<joint>, in the child link frame -->
+  <xacro:macro name="joint_ft_sensor" params="name">
+    <gazebo reference="${prefix}${name}">
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+    <gazebo>
+      <plugin name="ft_${name}" filename="libgazebo_ros_ft_sensor.so">
+        <ros>
+          <namespace>/joint_wrench</namespace>
+          <remapping>wrench:=${name}</remapping>
+        </ros>
+        <joint_name>${prefix}${name}</joint_name>
+        <update_rate>1000</update_rate>
+        <gaussian_noise>0.0</gaussian_noise>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:joint_ft_sensor name="joint1" />
+  <xacro:joint_ft_sensor name="joint2" />
+  <xacro:joint_ft_sensor name="joint3" />
+  <xacro:joint_ft_sensor name="joint4" />
+  <xacro:joint_ft_sensor name="joint5" />
+  <xacro:joint_ft_sensor name="joint6" />
+  <xacro:joint_ft_sensor name="joint7" />
+</robot>

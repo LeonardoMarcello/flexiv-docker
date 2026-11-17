@@ -1,0 +1,9 @@
+$include /etc/inputrc
+
+# Frecce su/giù: cerca nella cronologia i comandi che iniziano con quanto già digitato
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# Tab: mostra subito tutte le alternative, ignorando maiuscole/minuscole
+set show-all-if-ambiguous on
+set completion-ignore-case on

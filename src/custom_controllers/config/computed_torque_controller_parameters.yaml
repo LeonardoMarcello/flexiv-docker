@@ -1,0 +1,76 @@
+custom_controllers:
+  robot_sn: {
+    type: string,
+    default_value: "",
+    description: "Robot serial number, used to get the RDK connection owned by the Flexiv hardware interface",
+    read_only: true,
+  }
+  joints: {
+    type: string_array,
+    default_value: [],
+    description: "Names of the 7 arm joints, e.g. <robot_sn>_joint1 ... <robot_sn>_joint7",
+    read_only: true,
+    validation: {
+      unique<>: null,
+    }
+  }
+  kp: {
+    type: double_array,
+    default_value: [300.0, 300.0, 300.0, 300.0, 150.0, 150.0, 30.0],
+    description: "Proportional gains [Nm/rad]",
+    validation: {
+      fixed_size<>: [7],
+      lower_element_bounds<>: [0.0],
+    }
+  }
+  kv: {
+    type: double_array,
+    default_value: [30.0, 30.0, 30.0, 30.0, 15.0, 15.0, 3.0],
+    description: "Derivative gains [Nm s/rad]",
+    validation: {
+      fixed_size<>: [7],
+      lower_element_bounds<>: [0.0],
+    }
+  }
+  tau_limit: {
+    type: double_array,
+    default_value: [123.0, 123.0, 64.0, 64.0, 39.0, 39.0, 39.0],
+    description: "Joint torque limits [Nm] (Rizon4s defaults from flexiv_description joint_limits.yaml)",
+    read_only: true,
+    validation: {
+      fixed_size<>: [7],
+      lower_element_bounds<>: [0.0],
+    }
+  }
+  dq_limit: {
+    type: double_array,
+    default_value: [2.0944, 2.0944, 2.4435, 2.4435, 4.8869, 4.8869, 4.8869],
+    description: "Joint velocity limits [rad/s] used to scale the desired velocity",
+    read_only: true,
+    validation: {
+      fixed_size<>: [7],
+      lower_element_bounds<>: [0.0],
+    }
+  }
+  delta_tau_max: {
+    type: double,
+    default_value: 1.0,
+    description: "Maximum torque change per control cycle [Nm]",
+    validation: {
+      gt<>: [0.0],
+    }
+  }
+  compensate_gravity: {
+    type: bool,
+    default_value: false,
+    description: "Add the RDK gravity vector g to the command. Keep false on the real robot: the Flexiv hardware interface streams torques with gravity compensation enabled",
+  }
+  gravity: {
+    type: double_array,
+    default_value: [0.0, 0.0, -9.81],
+    description: "Gravity vector in the world frame [m/s^2], passed to flexiv::rdk::Model",
+    read_only: true,
+    validation: {
+      fixed_size<>: [3],
+    }
+  }

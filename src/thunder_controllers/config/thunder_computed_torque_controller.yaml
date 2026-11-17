@@ -1,0 +1,26 @@
+# Example: merge into flexiv_bringup/config/flexiv_controllers.yaml
+controller_manager:
+  ros__parameters:
+    thunder_computed_torque_controller:
+      type: thunder_controllers/ThunderComputedTorqueController
+
+thunder_computed_torque_controller:
+  ros__parameters:
+    joints:
+      - $(var robot_sn)_joint1
+      - $(var robot_sn)_joint2
+      - $(var robot_sn)_joint3
+      - $(var robot_sn)_joint4
+      - $(var robot_sn)_joint5
+      - $(var robot_sn)_joint6
+      - $(var robot_sn)_joint7
+    # --- Controller parameters --- #
+    #kp: [120.0, 120.0, 120.0, 120.0, 70.0, 70.0, 50.0]
+    #kv: [30.0, 30.0, 30.0, 30.0, 15.0, 15.0, 3.0]
+    #kp: [10.0, 10.0, 10.0, 10.0, 5.0, 5.0, 2.0]
+    #kv: [2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 0.5]
+    kp: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    kv: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    delta_tau_max: 1.0          # [Nm] per control cycle
+    compensate_gravity: true    # gravity already compensated by the robot
+    thunder_par_file: "Rizon4s_par.yaml"   # from share/thunder_controllers/thunder, must contain non-zero par_DYN

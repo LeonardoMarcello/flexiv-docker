@@ -1,0 +1,27 @@
+pipeline:
+  loaders: [urdf_loader]
+  builders: [kin_builder, dyn_builder, reg_builder]
+  generators: [robot_generator]
+urdf_loader:
+  urdf_path: Rizon4s.urdf
+  base_link: base_link
+  ee_link: flange
+  symbolic_kinematics: false
+  symbolic_dynamics: true
+  gravity:
+    symb: [0, 0, 0]
+    value: [0, 0, -9.81]
+  Base_to_L0:
+    symb: [1, 1, 1, 1, 1, 1]
+    tr: [0, 0, 0]
+    ypr: [0, 0, 0]
+  Ln_to_EE:
+    symb: [1, 1, 1, 1, 1, 1]
+    tr: [0, 0, 0]
+    ypr: [0, 0, 0]
+robot_generator:
+  gen_python: true
+  gen_casadi: true
+  gen_robot: true
+  copy_gen: true
+config_path: /home/thunder_dev/thunder_dynamics/src/thunder/robots/debug/Rizon4s.yaml

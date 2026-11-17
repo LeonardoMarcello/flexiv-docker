@@ -1,0 +1,8 @@
+<library path="custom_controllers">
+    <class name="custom_controllers/ComputedTorqueController"
+           type="custom_controllers::ComputedTorqueController" base_class_type="controller_interface::ControllerInterface">
+        <description>
+            Joint-space computed torque controller using the Flexiv RDK dynamic model (M, C, g).
+        </description>
+    </class>
+</library>

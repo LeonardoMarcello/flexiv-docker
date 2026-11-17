@@ -1,0 +1,85 @@
+thunder_controllers:
+  joints: {
+    type: string_array,
+    default_value: [],
+    description: "Names of the 7 arm joints, e.g. <robot_sn>_joint1 ... <robot_sn>_joint7",
+    read_only: true,
+    validation: {
+      unique<>: null,
+    }
+  }
+  kp: {
+    type: double_array,
+    #default_value: [120.0, 120.0, 120.0, 70.0, 70.0, 70.0, 50.0],
+    default_value: [10.0, 10.0, 10.0, 10.0, 5.0, 5.0, 2.0],
+    description: "Proportional gains [Nm/rad]",
+    validation: {
+      fixed_size<>: [7],
+      lower_element_bounds<>: [0.0],
+    }
+  }
+  kv: {
+    type: double_array,
+    #default_value: [30.0, 30.0, 30.0, 30.0, 15.0, 15.0, 3.0],
+    default_value: [2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 0.5],
+    description: "Derivative gains [Nm s/rad]",
+    validation: {
+      fixed_size<>: [7],
+      lower_element_bounds<>: [0.0],
+    }
+  }
+  tau_limit: {
+    type: double_array,
+    default_value: [123.0, 123.0, 64.0, 64.0, 39.0, 39.0, 39.0],
+    description: "Joint torque limits [Nm] (Rizon4s defaults from flexiv_description joint_limits.yaml)",
+    read_only: true,
+    validation: {
+      fixed_size<>: [7],
+      lower_element_bounds<>: [0.0],
+    }
+  }
+  dq_limit: {
+    type: double_array,
+    default_value: [2.0944, 2.0944, 2.4435, 2.4435, 4.8869, 4.8869, 4.8869],
+    description: "Joint velocity limits [rad/s] used to scale the desired velocity",
+    read_only: true,
+    validation: {
+      fixed_size<>: [7],
+      lower_element_bounds<>: [0.0],
+    }
+  }
+  delta_tau_max: {
+    type: double,
+    default_value: 1.0,
+    description: "Maximum torque change per control cycle [Nm]",
+    validation: {
+      gt<>: [0.0],
+    }
+  }
+  q_filter_cutoff_hz: {
+    type: double,
+    default_value: 0.0,
+    description: "Cutoff frequency [Hz] of the first-order low-pass filter on the joint positions. 0 disables the filter",
+    validation: {
+      gt_eq<>: [0.0],
+    }
+  }
+  dq_filter_cutoff_hz: {
+    type: double,
+    default_value: 0.0,
+    description: "Cutoff frequency [Hz] of the first-order low-pass filter on the joint velocities. 0 disables the filter",
+    validation: {
+      gt_eq<>: [0.0],
+    }
+  }
+  compensate_gravity: {
+    type: bool,
+    default_value: false,
+    description: "Add the Thunder gravity vector G to the command. Keep false on the real robot: the Flexiv hardware interface streams torques with gravity compensation enabled",
+  }
+  thunder_par_file: {
+    type: string,
+    default_value: "",
+    description: "Thunder dynamic parameters file. Empty: use the parameters built into the generated model. Relative paths are resolved from share/thunder_controllers/thunder",
+    read_only: true,
+  }

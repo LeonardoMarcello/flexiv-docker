@@ -1,0 +1,23 @@
+# ------------------------------------------------------------
+#   Configurazione bash aggiuntiva per l'utente flexiv
+# ------------------------------------------------------------
+
+# Ambiente ROS 2 e workspace
+source /opt/ros/humble/setup.bash
+[ -f "${WORKSPACE}/install/setup.bash" ] && source "${WORKSPACE}/install/setup.bash"
+
+# Autocompletamento (bash, ros2, colcon)
+[ -f /usr/share/bash-completion/bash_completion ] && source /usr/share/bash-completion/bash_completion
+[ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ] && source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
+
+# Cronologia persistente (montata dall'host in docker/history) e condivisa tra terminali
+mkdir -p ~/.history
+export HISTFILE=~/.history/bash_history
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoredups:erasedups
+shopt -s histappend
+PROMPT_COMMAND="history -a; history -n${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+
+# Terminator/GTK: silenzia l'avviso sull'accessibility bus
+export NO_AT_BRIDGE=1

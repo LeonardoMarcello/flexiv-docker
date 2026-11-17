@@ -1,0 +1,56 @@
+{
+    "name": "Flexiv ROS 2 Humble",
+
+    // Riusa docker-compose.yaml (rtprio, memlock, SYS_NICE, X11, host network)
+    // e aggiunge solo le opzioni specifiche per il dev container
+    "dockerComposeFile": [
+        "../docker-compose.yaml",
+        "docker-compose.devcontainer.yaml"
+    ],
+    "service": "flexiv_dev",
+    "workspaceFolder": "/home/flexiv/flexiv_ros2_ws",
+    "remoteUser": "flexiv",
+    "shutdownAction": "stopCompose",
+
+    // Eseguito sull'host prima di avviare il container: abilita la GUI (RViz)
+    "initializeCommand": "mkdir -p docker/history && (xhost +local:docker || true)",
+
+    // Eseguito nel container dopo la creazione: dipendenze + build del workspace
+    "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools-extension-pack",
+                "ms-python.python",
+                "ranch-hand-robotics.rde-ros-2",
+                "redhat.vscode-xml",
+                "redhat.vscode-yaml"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "ROS2.distro": "humble",
+                "C_Cpp.default.cppStandard": "c++17",
+                "C_Cpp.default.cStandard": "gnu11",
+                "C_Cpp.default.compilerPath": "/usr/bin/g++",
+                "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+                "C_Cpp.default.includePath": [
+                    "${workspaceFolder}/src/**",
+                    "${workspaceFolder}/install/**/include/**",
+                    "/home/flexiv/rdk_install/include/**",
+                    "/opt/ros/humble/include/**",
+                    "/usr/include/**"
+                ],
+                "python.analysis.extraPaths": [
+                    "/opt/ros/humble/lib/python3.10/site-packages",
+                    "/opt/ros/humble/local/lib/python3.10/dist-packages"
+                ],
+                "files.watcherExclude": {
+                    "**/build/**": true,
+                    "**/install/**": true,
+                    "**/log/**": true
+                }
+            }
+        }
+    }
+}

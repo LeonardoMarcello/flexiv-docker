@@ -1,0 +1,14 @@
+Meas for interace (see messaggio giorgio for gt)
+Joint	q [deg]	q [rad]	G [N·m]
+1	−72.16	−1.259430	0.000
+2	−9.89	−0.172613	24.723
+3	0.70	0.012217	0.262
+4	142.03	2.478891	−15.526
+5	−0.67	−0.011694	−1.594
+6	61.61	1.075297	3.090
+7	0.07	0.001222	0.000
+
+
+random jnt command
+ros2 topic pub -w 1 -1 /thunder_computed_torque_controller/command sensor_msgs/msg/JointState \
+  "{position: $(python3 -c "import random; q0=[0,-0.69813,0,1.570796,0,0.69813,0]; print([round(q+random.uniform(-0.3,0.3),3) for q in q0])")}"

@@ -1,0 +1,8 @@
+<library path="thunder_controllers">
+    <class name="thunder_controllers/ThunderComputedTorqueController"
+           type="thunder_controllers::ThunderComputedTorqueController" base_class_type="controller_interface::ControllerInterface">
+        <description>
+            Joint-space computed torque controller using a Thunder-generated dynamic model (M, C, G).
+        </description>
+    </class>
+</library>

@@ -1,0 +1,12 @@
+# Flexiv sources: downloaded by install.sh (flexiv_ros2 humble-v1.7 + RDK 1.7), not versioned here
+flexiv_ros2/
+
+# Local caches, history and backups
+.vscode/
+docker/history/
+*.tar.gz
+flexiv_description_local/
+
+# Thunder generated CasADi functions and builds: not needed to compile the controllers (~300 MB)
+src/thunder_controllers/thunder/*_generatedFiles/casadi_functions/
+src/thunder_controllers/thunder/*_generatedFiles/build/

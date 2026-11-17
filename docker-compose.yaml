@@ -1,0 +1,31 @@
+services:
+  flexiv_dev:
+    build: .
+    image: flexiv:1.7.1
+    container_name: flexiv
+    network_mode: host
+    ipc: host
+    # Abilita la priorità realtime (RL_RTPRIO) per evitare lag nei thread di controllo del robot
+    ulimits:
+      rtprio: 99
+      memlock: -1
+    cap_add:
+      - SYS_NICE
+    devices:
+      # Pass host GPU render nodes for Gazebo OpenGL hardware rendering
+      - /dev/dri:/dev/dri
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      #- RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION:-rmw_cyclonedds_cpp}
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      # Condivisione del socket X11 per abilitare la GUI (es. RViz) sul sistema host
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # Montaggio della cartella locale dentro la home dell'utente flexiv
+      - ./flexiv_ros2:/home/flexiv/flexiv_ros2_ws/src/flexiv_ros2
+      - ./src:/home/flexiv/flexiv_ros2_ws/src/flexiv_packages
+      # Cronologia dei comandi bash persistente tra riavvii/ricostruzioni del container
+      - ./docker/history:/home/flexiv/.history
+    stdin_open: true
+    tty: true

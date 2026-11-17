@@ -1,0 +1,11 @@
+# Override applicato sopra ../docker-compose.yaml solo quando si usa il dev container
+services:
+  flexiv_dev:
+    # Mantiene il container attivo indipendentemente dal CMD dell'immagine
+    command: sleep infinity
+    devices:
+      # Accelerazione GPU per RViz / Gazebo
+      - /dev/dri:/dev/dri
+    volumes:
+      # Rende disponibile la cartella .devcontainer (percorsi relativi alla cartella del primo compose file)
+      - ./.devcontainer:/home/flexiv/flexiv_ros2_ws/.devcontainer:cached

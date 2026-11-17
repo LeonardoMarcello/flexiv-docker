@@ -1,0 +1,22 @@
+# Example: merge into flexiv_bringup/config/flexiv_controllers.yaml
+controller_manager:
+  ros__parameters:
+    rdk_computed_torque_controller:
+      type: custom_controllers/ComputedTorqueController
+
+rdk_computed_torque_controller:
+  ros__parameters:
+    robot_sn: $(var robot_sn)
+    joints:
+      - $(var robot_sn)_joint1
+      - $(var robot_sn)_joint2
+      - $(var robot_sn)_joint3
+      - $(var robot_sn)_joint4
+      - $(var robot_sn)_joint5
+      - $(var robot_sn)_joint6
+      - $(var robot_sn)_joint7
+    # --- Controller parameters --- #
+    kp: [300.0, 300.0, 300.0, 300.0, 150.0, 150.0, 30.0]
+    kv: [30.0, 30.0, 30.0, 30.0, 15.0, 15.0, 3.0]
+    delta_tau_max: 1.0          # [Nm] per control cycle
+    compensate_gravity: false   # To use when gravity is not already compensated by the robot

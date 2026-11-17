@@ -1,0 +1,14 @@
+[build-system]
+requires = ["scikit-build-core", "pybind11"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "thunder_Rizon4s_py"
+version = "1.0.1"
+dependencies = [
+    "pybind11",
+]
+
+[tool.scikit-build]
+cmake.version = ">=3.15"
+wheel.packages = ["thunder_Rizon4s_py"]
