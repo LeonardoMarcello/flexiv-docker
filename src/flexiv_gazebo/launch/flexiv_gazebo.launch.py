@@ -40,7 +40,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "robot_type",
             default_value="Rizon4s",
-            description="Single-arm Flexiv robot type (config folder in flexiv_description).",
+            description="Single-arm Flexiv robot type (config folder in flexiv_gazebo/config).",
         ),
         DeclareLaunchArgument(
             "robot_controller",
