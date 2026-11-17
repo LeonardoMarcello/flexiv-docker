@@ -126,7 +126,7 @@ On the real robot gravity is compensated by the robot itself: keep `compensate_g
 the controllers. See [thunder_controllers/README.md](src/thunder_controllers/README.md)
 for the controller parameters and how to send references.
 
-## Simulation (Gazebo)
+## Custom Simulation (Gazebo)
 
 ```bash
 ros2 launch flexiv_gazebo flexiv_gazebo.launch.py                 # runs on its own
